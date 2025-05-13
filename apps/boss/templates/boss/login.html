@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .errorlist {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            list-style-type: none;
+            padding: 0;
+        }
+        .errorlist li {
+            margin-bottom: 0.25rem;
+        }
+        .input-error {
+            border-color: #dc2626;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="login-container bg-white p-8 rounded-lg shadow-lg max-w-md w-full space-y-6">
+        <h2 class="text-3xl font-semibold text-center text-gray-800 mb-4">Login to Your Account</h2>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="text-red-600 text-sm">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+            
+            {% for field in form %}
+                <div class="space-y-2">
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+                    <div class="relative">
+                        {{ field }}
+                        {% if field.errors %}
+                            <ul class="errorlist" id="{{ field.id_for_label }}-errors">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500">Login</button>
+        </form>
+
+        <div class="text-center">
+            <p class="text-sm text-gray-600">
+                Don't have an account? <a href="{% url 'boss_signup' %}" class="text-blue-600 hover:underline">Sign up here</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Add error styling to input fields dynamically
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.errorlist').forEach(errorList => {
+                const input = errorList.previousElementSibling;
+                if (input && input.tagName === 'INPUT') {
+                    input.classList.add('input-error', 'border', 'border-red-600');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

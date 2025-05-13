@@ -1,0 +1,101 @@
+{% extends "boss/base.html" %}
+
+{% block title %}Do'kon Batafsil{% endblock %}
+
+{% block user_name %}Boss: Ali Valiev{% endblock %}
+
+{% block nav_items %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'boss_dashboard'%}">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'boss_users'%}">Foydalanuvchilar</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <a href="boss_dashboard.html" class="btn btn-secondary mb-3"><i class="fas fa-arrow-left"></i> Orqaga</a>
+    <h2>Toshkent Filiali - Batafsil</h2>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Bugungi Sotuvlar</div>
+                <div class="card-body">
+                    <h5 class="card-title">8,000,000 so'm</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Tranzaksiyalar</div>
+                <div class="card-body">
+                    <h5 class="card-title">150</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Kam Zaxira Mahsulotlari</div>
+                <div class="card-body">
+                    <h5 class="card-title">5</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Eng Ko'p Sotilgan Mahsulot</div>
+                <div class="card-body">
+                    <h5 class="card-title">Sut - 50 dona</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3>Eng Ko'p Sotilgan Mahsulotlar</h3>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Mahsulot</th>
+                    <th>Sotilgan Miqdor</th>
+                    <th>Jami Daromad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sut</td>
+                    <td>50</td>
+                    <td>125,000 so'm</td>
+                </tr>
+                <tr>
+                    <td>Non</td>
+                    <td>30</td>
+                    <td>45,000 so'm</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3>Zaxira Holati</h3>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Mahsulot</th>
+                    <th>Joriy Zaxira</th>
+                    <th>Minimal Zaxira</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Sut</td>
+                    <td>100</td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>Non</td>
+                    <td>20</td>
+                    <td>30</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

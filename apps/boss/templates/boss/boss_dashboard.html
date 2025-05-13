@@ -1,0 +1,74 @@
+{% extends "boss/base.html" %}
+
+{% block title %}Boss Dashboard{% endblock %}
+
+{% block user_name %}{{ first_name }} {{ last_name }}{% endblock %}
+
+{% block nav_items %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'boss_dashboard'%}">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'boss_users'%}">Foydalanuvchilar</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <h2>Boss Dashboard</h2>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Umumiy Sotuvlar</div>
+                <div class="card-body">
+                    <h5 class="card-title">15,000,000 so'm</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Tranzaksiyalar</div>
+                <div class="card-body">
+                    <h5 class="card-title">300</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Kam Zaxira Mahsulotlari</div>
+                <div class="card-body">
+                    <h5 class="card-title">10</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3>Do'konlar</h3>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Do'kon Nomi</th>
+                    <th>Bugungi Sotuvlar</th>
+                    <th>Tranzaksiyalar</th>
+                    <th>Kam Zaxira</th>
+                    <th>Harakat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Toshkent Filiali</td>
+                    <td>8,000,000 so'm</td>
+                    <td>150</td>
+                    <td>5</td>
+                    <td><a href="{% url 'boss_market_details'%}" class="btn btn-primary btn-sm">Batafsil</a></td>
+                </tr>
+                <tr>
+                    <td>Samarqand Filiali</td>
+                    <td>7,000,000 so'm</td>
+                    <td>150</td>
+                    <td>5</td>
+                    <td><a href="{% url 'boss_market_details'%}" class="btn btn-primary btn-sm">Batafsil</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

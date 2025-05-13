@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Market Admin</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'home_market' %}">Boshqaruv paneli</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin_products' %}">Mahsulotlar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href = "{% url 'admin_sales' %}">Savdolar</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'admin_inventory' %}">Ombor</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Chiqish</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <h2>Products</h2>
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">Add Product</button>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Barcode</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Milk</td>
+                    <td>123456</td>
+                    <td>$2.50</td>
+                    <td>100</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editProductModal">Edit</button>
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Bread</td>
+                    <td>654321</td>
+                    <td>$1.50</td>
+                    <td>50</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editProductModal">Edit</button>
+                        <button class="btn btn-sm btn-danger">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="product-name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="product-name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product-barcode" class="form-label">Barcode</label>
+                        <input type="text" class="form-control" id="product-barcode">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product-price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="product-price">
+                    </div>
+                    <div class="mb-3">
+                        <label for="product-stock" class="form-label">Stock</label>
+                        <input type="number" class="form-control" id="product-stock">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Product Modal -->
+    <div class="modal fade" id="editProductModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="edit-name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="edit-name" value="Milk">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-barcode" class="form-label">Barcode</label>
+                        <input type="text" class="form-control" id="edit-barcode" value="123456">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="edit-price" value="2.50">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit-stock" class="form-label">Stock</label>
+                        <input type="number" class="form-control" id="edit-stock" value="100">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Update Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
