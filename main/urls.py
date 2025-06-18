@@ -21,5 +21,5 @@ import apps
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('market/', include('apps.market.urls')),
-    path('boss/', include('apps.boss.urls'))
+    # path('boss/', include('apps.boss.urls'))
 ]

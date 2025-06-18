@@ -76,7 +76,7 @@
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="#">Market POS</a>
         <div class="d-flex align-items-center">
-            <span class="navbar-text me-3">Kassir: Ali Valiyev</span>
+            <span class="navbar-text me-3">Kassir: {{ first_name }} {{ last_name }}</span>
             <a href="{% url 'admin_panel' %}" class="btn btn-primary btn-sm me-2"><i class="bi bi-gear"></i> Admin Paneli</a>
             <a href="#" class="btn btn-outline-danger btn-sm"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
         </div>
@@ -91,10 +91,10 @@
                 <div class="barcode-card mb-4">
                     <h5 class="mb-3 fw-bold text-primary"><i class="fas fa-barcode me-2"></i>Mahsulotni skanerlash yoki qidirish</h5>
                     <div class="input-group">
-                        <input type="text" id="barcode-input" class="form-control" placeholder="Shtrix-kodni skanerlang yoki mahsulotni qidiring" autocomplete="off">
+                        <input type="text" id="barcode-input" class="form-control" name = "q" placeholder="Shtrix-kodni skanerlang yoki mahsulotni qidiring" autocomplete="off">
                         <button class="btn btn-outline-primary" type="button" id="search-btn"><i class="fas fa-search"></i></button>
                     </div>
-                    <ul class="dropdown-menu w-100 mt-1" id="product-suggestions"></ul>
+                    <ul id="product-suggestions" class="dropdown-menu w-100 mt-1" style="max-width: 320px; min-width: 250px;"></ul>
                 </div>
                 <div class="table-responsive">
                     <table class="table cart-table">
@@ -108,33 +108,14 @@
                             </tr>
                         </thead>
                         <tbody id="cart-body">
-                            <tr>
-                                <td>Sut</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-sm btn-outline-secondary dec-qty">-</button>
-                                        <span class="px-2">2</span>
-                                        <button class="btn btn-sm btn-outline-secondary inc-qty">+</button>
-                                    </div>
-                                </td>
-                                <td>$2.50</td>
-                                <td>$5.00</td>
-                                <td><button class="btn btn-danger btn-sm remove-item"><i class="fas fa-trash"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td>Non</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-sm btn-outline-secondary dec-qty">-</button>
-                                        <span class="px-2">1</span>
-                                        <button class="btn btn-sm btn-outline-secondary inc-qty">+</button>
-                                    </div>
-                                </td>
-                                <td>$1.50</td>
-                                <td>$1.50</td>
-                                <td><button class="btn btn-danger btn-sm remove-item"><i class="fas fa-trash"></i></button></td>
-                            </tr>
                         </tbody>
+                            <tfoot>
+      <tr class="fw-bold">
+        <td colspan="3" class="text-end">Umumiy:</td>
+        <td id="grand-total">0</td>
+        <td></td>
+      </tr>
+    </tfoot>
                     </table>
                 </div>
             </div>
@@ -143,7 +124,7 @@
             <div class="col-lg-4">
                 <div class="payment-card mb-4">
                     <h5 class="mb-3 fw-bold text-success"><i class="fas fa-credit-card me-2"></i>To'lov</h5>
-                    <div class="total-amount mb-4">Jami: $6.50</div>
+                    <div class="total-amount mb-4" id="total-display">Jami: 0 so'm</div>
                     <div class="d-grid gap-3">
                         <button class="btn btn-primary btn-payment" data-bs-toggle="modal" data-bs-target="#cashModal">
                             <i class="fas fa-money-bill-wave me-2"></i>Naqd
@@ -217,108 +198,120 @@
         </div>
     </div>
 
-    <script>
-        const products = [
-            { barcode: '123456', name: 'Sut', price: 2.50 },
-            { barcode: '654321', name: 'Non', price: 1.50 },
-            { barcode: '789123', name: 'Tuxum', price: 3.00 }
-        ];
+<script>
+const totalDisplayDiv = document.getElementById('total-display');
 
-        // Add product to cart
-        function addToCart(product) {
-            const row = `
-                <tr>
-                    <td>${product.name}</td>
-                    <td>
-                        <div class="btn-group">
-                            <button class="btn btn-sm btn-outline-secondary dec-qty">-</button>
-                            <span class="px-2">1</span>
-                            <button class="btn btn-sm btn-outline-secondary inc-qty">+</button>
-                        </div>
-                    </td>
-                    <td>$${product.price.toFixed(2)}</td>
-                    <td>$${product.price.toFixed(2)}</td>
-                    <td><button class="btn btn-danger btn-sm remove-item"><i class="fas fa-trash"></i></button></td>
-                </tr>`;
-            $('#cart-body').append(row);
-            updateTotal();
-        }
+document.addEventListener('DOMContentLoaded', () => {
 
-        // Update total amount
-        function updateTotal() {
-            let total = 0;
-            $('#cart-body tr').each(function() {
-                const qty = parseInt($(this).find('span').text());
-                const price = parseFloat($(this).find('td:nth-child(3)').text().replace('$', ''));
-                total += qty * price;
-            });
-            $('.total-amount').text(`Jami: $${total.toFixed(2)}`);
-        }
+  /* ------------------------  ELEMENT REFERENCES  ------------------------ */
+  const input            = document.getElementById('barcode-input');
+  const resultsContainer = document.getElementById('product-suggestions');
+  const cartBody         = document.getElementById('cart-body');
+  const grandTotalCell   = document.getElementById('grand-total');
 
-        // Barcode input handling
-        $('#barcode-input').on('keypress', function(e) {
-            if (e.which === 13) {
-                const barcode = $(this).val();
-                const product = products.find(p => p.barcode === barcode);
-                if (product) {
-                    addToCart(product);
-                    $(this).val('');
-                    $('#product-suggestions').hide();
-                } else {
-                    alert('Mahsulot topilmadi!');
-                }
-            }
-        }).on('input', function() {
-            const query = $(this).val().toLowerCase();
-            if (query.length > 0) {
-                const suggestions = products.filter(p => p.name.toLowerCase().includes(query) || p.barcode.includes(query));
-                const suggestionHtml = suggestions.map(p => `
-                    <li class="dropdown-item" data-barcode="${p.barcode}">${p.name} - $${p.price.toFixed(2)}</li>
-                `).join('');
-                $('#product-suggestions').html(suggestionHtml).show();
-            } else {
-                $('#product-suggestions').hide();
-            }
-        });
+  /* ------------------------  SEARCH / AUTOCOMPLETE  ------------------------ */
+  input.addEventListener('input', () => {
+    const query = input.value.trim();
+    if (!query) return hideSuggestions();
 
-        // Product suggestion click
-        $('#product-suggestions').on('click', 'li', function() {
-            const barcode = $(this).data('barcode');
-            const product = products.find(p => p.barcode === barcode);
-            addToCart(product);
-            $('#barcode-input').val('');
-            $('#product-suggestions').hide();
-        });
+    fetch(`/market/api/products/?q=${encodeURIComponent(query)}`, { credentials: 'same-origin' })
+      .then(r => r.ok ? r.json() : Promise.reject(r.statusText))
+      .then(data => {
+        resultsContainer.innerHTML = data.html || '';
+        data.html ? showSuggestions() : hideSuggestions();
+      })
+      .catch(err => {
+        console.error(err);
+        resultsContainer.innerHTML =
+          '<li class="dropdown-item text-danger">Xatolik yuz berdi</li>';
+        showSuggestions();
+      });
+  });
 
-        // Quantity controls
-        $('#cart-body').on('click', '.inc-qty', function() {
-            const qtySpan = $(this).siblings('span');
-            let qty = parseInt(qtySpan.text());
-            qtySpan.text(++qty);
-            const price = parseFloat($(this).closest('tr').find('td:nth-child(3)').text().replace('$', ''));
-            $(this).closest('tr').find('td:nth-child(4)').text(`$${(qty * price).toFixed(2)}`);
-            updateTotal();
-        }).on('click', '.dec-qty', function() {
-            const qtySpan = $(this).siblings('span');
-            let qty = parseInt(qtySpan.text());
-            if (qty > 1) {
-                qtySpan.text(--qty);
-                const price = parseFloat($(this).closest('tr').find('td:nth-child(3)').text().replace('$', ''));
-                $(this).closest('tr').find('td:nth-child(4)').text(`$${(qty * price).toFixed(2)}`);
-                updateTotal();
-            }
-        }).on('click', '.remove-item', function() {
-            $(this).closest('tr').remove();
-            updateTotal();
-        });
+  /* ------------------------  ADD‑TO‑CART (from suggestions)  ------------------------ */
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.add-to-cart-btn');
+    if (!btn) return;
 
-        // Cash payment logic
-        $('#amount-tendered').on('input', function() {
-            const tendered = parseFloat($(this).val()) || 0;
-            const total = parseFloat($('.total-amount').text().replace('Jami: $', ''));
-            const change = tendered - total;
-            $('#change').val(change >= 0 ? `$${change.toFixed(2)}` : 'Yetarli emas');
-        });
-    </script>
-</body>
-</html>
+    addToCart(
+      btn.dataset.id,
+      btn.dataset.name,
+      parseInt(btn.dataset.price, 10)
+    );
+    hideSuggestions();
+    input.value = '';   // clear search box
+  });
+
+  /* ------------------------  CART EVENT DELEGATION  ------------------------ */
+  cartBody.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+
+    const row      = btn.closest('tr');
+    const qtySpan  = row.querySelector('.cart-qty');
+    const unit     = parseInt(row.dataset.price, 10);
+    let   qty      = parseInt(qtySpan.textContent, 10);
+
+    if (btn.classList.contains('inc-qty'))  qty++;
+    if (btn.classList.contains('dec-qty'))  qty = Math.max(1, qty - 1);
+    if (btn.classList.contains('remove-item')) {
+      row.remove();
+      updateGrandTotal();
+      return;
+    }
+
+    qtySpan.textContent = qty;
+    row.querySelector('.row-total').textContent = formatSum(unit * qty);
+    updateGrandTotal();
+  });
+
+  /* ------------------------  CORE FUNCTIONS  ------------------------ */
+  function addToCart(id, name, price) {
+    // already in cart?
+    let row = [...cartBody.rows].find(r => r.dataset.id === id);
+    if (row) {
+      row.querySelector('.inc-qty').click();  // simply bump quantity
+      return;
+    }
+
+    // create new row
+    row = document.createElement('tr');
+    row.dataset.id    = id;
+    row.dataset.price = price;               // store unit price
+
+    row.innerHTML = `
+      <td>${name}</td>
+      <td class="text-center">
+        <div class="btn-group">
+          <button class="btn btn-sm btn-outline-secondary dec-qty">-</button>
+          <span class="px-2 cart-qty">1</span>
+          <button class="btn btn-sm btn-outline-secondary inc-qty">+</button>
+        </div>
+      </td>
+      <td>${formatSum(price)}</td>
+      <td class="row-total">${formatSum(price)}</td>
+      <td><button class="btn btn-danger btn-sm remove-item">
+            <i class="fas fa-trash"></i>
+          </button></td>
+    `;
+    cartBody.appendChild(row);
+    updateGrandTotal();
+  }
+
+  function updateGrandTotal() {
+    const total = [...cartBody.rows]
+      .reduce((sum, r) => sum + parseInt(r.dataset.price, 10) *
+                                   parseInt(r.querySelector('.cart-qty').textContent, 10), 0);
+    grandTotalCell.textContent = formatSum(total);
+    totalDisplayDiv.textContent = `Jami: ${formatSum(total)} so'm`;
+
+  }
+
+  function formatSum(n) {
+    return n.toLocaleString('uz-UZ'); // “12 500”
+  }
+
+  function showSuggestions() { resultsContainer.classList.add('show'); }
+  function hideSuggestions() { resultsContainer.classList.remove('show'); }
+});
+</script>

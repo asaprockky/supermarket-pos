@@ -26,7 +26,6 @@ SECRET_KEY = 'django-insecure-d77z$4v136c7c_3chdas463smm103ok2%jlgpyf(w386r=7_@f
 DEBUG = True
 
 ALLOWED_HOSTS = []
-AUTH_USER_MODEL = 'boss.UserProfile'
 
 # Application definition
 
@@ -40,8 +39,7 @@ DJANGO_APPS = [
 ]
 THIRD_PARTY_APPS = ['widget_tweaks',]
 
-LOCAL_APPS = ['apps.market',
-              'apps.boss'
+LOCAL_APPS = ['apps.market'
               ]
 
 
@@ -129,6 +127,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
-LOGIN_REDIRECT_URL = '/boss/'  # Redirect to homepage after login (or your desired URL, e.g., 'boss/')
+LOGIN_REDIRECT_URL = '/market/'  # Redirect to homepage after login (or your desired URL, e.g., 'boss/')
 LOGOUT_REDIRECT_URL = 'login'  # Redirect to login page after logout
 LOGIN_URL = 'login'  # URL for unauthenticated users

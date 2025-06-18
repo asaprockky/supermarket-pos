@@ -47,6 +47,7 @@
                 </tr>
             </thead>
             <tbody>
+                {{ for product in products}}
                 <tr>
                     <td>Milk</td>
                     <td>123456</td>
@@ -57,16 +58,7 @@
                         <button class="btn btn-sm btn-danger">Delete</button>
                     </td>
                 </tr>
-                <tr>
-                    <td>Bread</td>
-                    <td>654321</td>
-                    <td>$1.50</td>
-                    <td>50</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editProductModal">Edit</button>
-                        <button class="btn btn-sm btn-danger">Delete</button>
-                    </td>
-                </tr>
+                {{ endfor }}
             </tbody>
         </table>
     </div>
