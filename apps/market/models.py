@@ -12,7 +12,7 @@ ROLE_CHOICES = [
 
 
 class Market(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100, verbose_name="Do'kon Nomi")
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='markets', verbose_name="Egasi")
     address = models.TextField(blank=True, verbose_name="Manzil")
@@ -44,6 +44,7 @@ class Product(models.Model):
     id = models.IntegerField(primary_key= True)
     product_name = models.CharField(max_length= 128)
     stock = models.PositiveIntegerField(default= 0)
+    restock_level = models.PositiveIntegerField(default=20)
     barcode = models.CharField(max_length= 128, unique= True, blank= True)
     price = models.DecimalField(max_digits= 20, decimal_places= 2)
     cost = models.DecimalField(max_digits= 20, decimal_places= 2)
@@ -69,7 +70,7 @@ class Transaction(models.Model):
     payment_method = models.CharField(max_length= 20, choices= PAYMENT_METHOD_CHOICES)
 
     def __str__(self):
-        return f"#{self.id} - {self.user.telegram} - {self.payment_method}"
+        return f"#{self.id} - {self.user} - {self.payment_method}"
 
 class TransactionItem(models.Model):
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='items')

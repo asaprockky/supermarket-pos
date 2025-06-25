@@ -78,14 +78,20 @@
         <div class="d-flex align-items-center">
             <span class="navbar-text me-3">Kassir: {{ first_name }} {{ last_name }}</span>
             <a href="{% url 'admin_panel' %}" class="btn btn-primary btn-sm me-2"><i class="bi bi-gear"></i> Admin Paneli</a>
-            <a href="#" class="btn btn-outline-danger btn-sm"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
+            <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm"><i class="fas fa-sign-out-alt"></i> Chiqish</a>
         </div>
     </div>
 </nav>
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
 
 
     <div class="container-fluid py-4">
         <div class="row g-4">
+
             <!-- Left Column: Barcode Input and Cart -->
             <div class="col-lg-8">
                 <div class="barcode-card mb-4">
@@ -159,10 +165,15 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <form method="post" action="{% url 'home_market' %}" id="cash-form">
+
                     <div class="mb-3">
+                        {% csrf_token %}
+                        
                         <label for="amount-tendered" class="form-label">To'lov summasi</label>
-                        <input type="number" class="form-control" id="amount-tendered" step="0.01" placeholder="Summani kiriting">
+                        <input type="number" name="payment_amount" class="form-control" id="amount-tendered" step="0.01" placeholder="Summani kiriting">
                     </div>
+                    <input type="hidden" name="cart_json" id="cart-json">
                     <div class="mb-3">
                         <label for="change" class="form-label">Qaytim</label>
                         <input type="text" class="form-control" id="change" disabled value="$0.00">
@@ -170,8 +181,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
-                    <button type="button" class="btn btn-success" id="complete-cash">To'lovni yakunlash</button>
+                    <button type="submit" class="btn btn-success" id="complete-cash">To'lovni yakunlash</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -199,17 +211,18 @@
     </div>
 
 <script>
-const totalDisplayDiv = document.getElementById('total-display');
-
 document.addEventListener('DOMContentLoaded', () => {
 
-  /* ------------------------  ELEMENT REFERENCES  ------------------------ */
+  /* --------------------  ELEMENT REFERENCES  -------------------- */
   const input            = document.getElementById('barcode-input');
   const resultsContainer = document.getElementById('product-suggestions');
   const cartBody         = document.getElementById('cart-body');
   const grandTotalCell   = document.getElementById('grand-total');
+  const totalDisplayDiv  = document.getElementById('total-display');
+  const cashForm         = document.getElementById('cash-form');
+  const cartHidden       = document.getElementById('cart-json');
 
-  /* ------------------------  SEARCH / AUTOCOMPLETE  ------------------------ */
+  /* --------------------  SEARCH / AUTOCOMPLETE  -------------------- */
   input.addEventListener('input', () => {
     const query = input.value.trim();
     if (!query) return hideSuggestions();
@@ -228,29 +241,28 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 
-  /* ------------------------  ADD‑TO‑CART (from suggestions)  ------------------------ */
+  /* --------------------  ADD-TO-CART (from suggestions)  -------------------- */
   document.addEventListener('click', e => {
     const btn = e.target.closest('.add-to-cart-btn');
     if (!btn) return;
 
-    addToCart(
-      btn.dataset.id,
-      btn.dataset.name,
-      parseInt(btn.dataset.price, 10)
-    );
+    addToCart(btn.dataset.id,
+              btn.dataset.name,
+              parseInt(btn.dataset.price, 10));
+
     hideSuggestions();
-    input.value = '';   // clear search box
+    input.value = '';  // clear search box
   });
 
-  /* ------------------------  CART EVENT DELEGATION  ------------------------ */
+  /* --------------------  CART EVENT DELEGATION  -------------------- */
   cartBody.addEventListener('click', e => {
     const btn = e.target.closest('button');
     if (!btn) return;
 
-    const row      = btn.closest('tr');
-    const qtySpan  = row.querySelector('.cart-qty');
-    const unit     = parseInt(row.dataset.price, 10);
-    let   qty      = parseInt(qtySpan.textContent, 10);
+    const row     = btn.closest('tr');
+    const qtySpan = row.querySelector('.cart-qty');
+    const unit    = parseInt(row.dataset.price, 10);
+    let   qty     = parseInt(qtySpan.textContent, 10);
 
     if (btn.classList.contains('inc-qty'))  qty++;
     if (btn.classList.contains('dec-qty'))  qty = Math.max(1, qty - 1);
@@ -265,19 +277,31 @@ document.addEventListener('DOMContentLoaded', () => {
     updateGrandTotal();
   });
 
-  /* ------------------------  CORE FUNCTIONS  ------------------------ */
+  /* --------------------  CASH FORM SUBMIT -------------------- */
+  if (cashForm) {
+    cashForm.addEventListener('submit', () => {
+      const cart = [...cartBody.rows].map(row => ({
+        product_id: row.dataset.id,
+        qty:        parseInt(row.querySelector('.cart-qty').textContent, 10),
+        unit_price: parseFloat(row.dataset.price)
+      }));
+      cartHidden.value = JSON.stringify(cart);
+      // console.log("Submitting cart:", cartHidden.value); // debug
+    });
+  }
+
+  /* --------------------  FUNCTIONS -------------------- */
   function addToCart(id, name, price) {
     // already in cart?
     let row = [...cartBody.rows].find(r => r.dataset.id === id);
     if (row) {
-      row.querySelector('.inc-qty').click();  // simply bump quantity
+      row.querySelector('.inc-qty').click();
       return;
     }
 
-    // create new row
     row = document.createElement('tr');
     row.dataset.id    = id;
-    row.dataset.price = price;               // store unit price
+    row.dataset.price = price;
 
     row.innerHTML = `
       <td>${name}</td>
@@ -292,26 +316,27 @@ document.addEventListener('DOMContentLoaded', () => {
       <td class="row-total">${formatSum(price)}</td>
       <td><button class="btn btn-danger btn-sm remove-item">
             <i class="fas fa-trash"></i>
-          </button></td>
-    `;
+          </button></td>`;
     cartBody.appendChild(row);
     updateGrandTotal();
   }
 
   function updateGrandTotal() {
-    const total = [...cartBody.rows]
-      .reduce((sum, r) => sum + parseInt(r.dataset.price, 10) *
-                                   parseInt(r.querySelector('.cart-qty').textContent, 10), 0);
-    grandTotalCell.textContent = formatSum(total);
+    const total = [...cartBody.rows].reduce((sum, r) => (
+        sum + parseInt(r.dataset.price, 10) *
+              parseInt(r.querySelector('.cart-qty').textContent, 10)
+    ), 0);
+    grandTotalCell.textContent  = formatSum(total);
     totalDisplayDiv.textContent = `Jami: ${formatSum(total)} so'm`;
-
   }
 
   function formatSum(n) {
-    return n.toLocaleString('uz-UZ'); // “12 500”
+    return n.toLocaleString('uz-UZ');
   }
 
   function showSuggestions() { resultsContainer.classList.add('show'); }
   function hideSuggestions() { resultsContainer.classList.remove('show'); }
+
 });
 </script>
+

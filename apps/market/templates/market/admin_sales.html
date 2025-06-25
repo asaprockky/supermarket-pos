@@ -28,45 +28,49 @@
                     <a class="nav-link" href="{% url 'admin_inventory' %}">Ombor</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Chiqish</a>
+                    <a class="nav-link" href="{% url 'logout' %}">Chiqish</a>
                 </li>
             </ul>
         </div>
     </nav>
     <div class="container mt-4">
+        <form action="{% url 'admin_sales' %}" method="get" class="container mt-4">
+              {% csrf_token %}
         <h2>Sales Reports</h2>
         <div class="row mb-3">
+        
             <div class="col-md-3">
-                <label for="start-date" class="form-label">Start Date</label>
-                <input type="date" class="form-control" id="start-date">
+                <label for="start-date" class="form-label">Boshlanish sanasi</label>
+                <input type="date" name="start" id="start-date" class="form-control" id="start-date">
             </div>
             <div class="col-md-3">
-                <label for="end-date" class="form-label">End Date</label>
-                <input type="date" class="form-control" id="end-date">
+                <label for="end-date" class="form-label">Tugash sanasi</label>
+                <input type="date" name="end" id="end-date" class="form-control" id="end-date">
             </div>
             <div class="col-md-3 mt-4">
-                <button type="button" class="btn btn-primary">Generate Report</button>
+                <button type="submit" class="btn btn-primary">Hisobotni yaratish</button>
             </div>
+        </form>
         </div>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Transaction ID</th>
-                    <th>Total Amount</th>
+                <th>Sana</th>
+                <th>Tranzaksiya ID</th>
+                <th>Jami summa (so'm)</th>
+                <th>To'lov usuli</th>
+
                 </tr>
             </thead>
             <tbody>
+                {% for transaction in transactions %}
                 <tr>
-                    <td>2023-10-01</td>
-                    <td>001</td>
-                    <td>$100.00</td>
-                </tr>
-                <tr>
-                    <td>2023-10-01</td>
-                    <td>002</td>
-                    <td>$50.00</td>
-                </tr>
+                    <td> {{ transaction.transaction_created_at }} </td>
+                    <td> {{ transaction.id }} </td>
+                    <td>{{ transaction.total_price }}</td>
+                    <td>{{ transaction.payment_method }}</td>
+                </tr>       
+                {% endfor %}
             </tbody>
         </table>
     </div>

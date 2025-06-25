@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate
 from django import forms
+from . import models
 
 class MarketLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -21,3 +22,9 @@ class MarketLoginForm(AuthenticationForm):
                 self.confirm_login_allowed(self.user_cache)
 
         return self.cleaned_data
+    
+
+class AddProductFOrm(forms.ModelForm):
+    class Meta:
+        model = models.Product
+        fields  = ["product_name", "stock", "barcode", "price", "cost", "description"]
