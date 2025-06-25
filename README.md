@@ -25,24 +25,16 @@ Manage products, stock levels, and transactions from a single, mobile-friendly d
 
 ## 🚀 Live Demo / Test Link
 
-> ### <https://market-admin-demo.onrender.com>
+> ### <https://fulstek.uz>
 
 *Logged-out users are redirected to the login page.*  
-Use these demo credentials:
-
-| Role      | Username | Password  |
-|-----------|----------|-----------|
-| Owner     | `owner`  | `demo123` |
-| Cashier   | `cash`   | `demo123` |
-
-*(The database resets every 24 h.)*
 
 ---
 
 ## 🏗️ Quick Start (local)
 
 ```bash
-git clone https://github.com/yourusername/market-admin.git
+git clone (https://github.com/asaprockky/supermarket-pos.git)
 cd market-admin
 
 # 1. Create venv + install deps
@@ -147,20 +139,12 @@ docker compose up --build
 3. `black . && isort .`
 4. PR 🚀
 
-All feedback is welcome – open an issue or ping me on Telegram **@yourhandle**.
+All feedback is welcome – open an issue or ping me on Telegram **@s17aj_04**.
 
 ---
 
-## 📜 License
 
-MIT © 2025 Your Name
 
 ---
 
 > *Made with ❤️ in Uzbekistan – «Bir qadam oldinga, har kun!»*
-
-```
-
-> **Save as `README.md`** at the root of your repository.  
-> Replace placeholder links, usernames, and screenshots as needed, and you’re good to ship 🚀
-```
