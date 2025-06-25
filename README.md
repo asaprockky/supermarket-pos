@@ -1,150 +1,126 @@
-````markdown
-# 🛒 Market Admin – Inventory & Sales Management (Django 5.2 + Bootstrap 5)
 
-A lightweight back-office web app for small shops and supermarkets.  
-Manage products, stock levels, and transactions from a single, mobile-friendly dashboard.
+# 🏨 Hotel CRM V2 – Django Hotel Management System
 
-<div align="center">
-  <img src="docs/screenshot-dashboard.png" alt="Dashboard screenshot" width="90%">
-</div>
+Hotel CRM V2 is a Django-based platform designed to streamline hotel operations, including guest management, room booking, sales reporting, and admin control panels. This is an advanced version with cleaner UI, better structure, and integration capabilities.
 
 ---
 
-## ✨ Key Features
+## 🚀 Features
 
-| Module               | What you can do                                                                 |
-|----------------------|---------------------------------------------------------------------------------|
-| **Products**         | Create, edit, delete items; bar-code field, cost/price, category                |
-| **Inventory**        | See current stock, set per-product **Restock Level**, one-click **Restock**     |
-| **Sales**            | Transaction list with total price & payment method                              |
-| **Dashboard**        | Cards for today’s revenue, low-stock alerts, quick links                        |
-| **Auth**             | Django sessions, owner / cashier roles (customisable)                           |
-| **API**              | `/api/products/` autocomplete endpoint (HTMX-friendly JSON)                     |
-
----
-
-## 🚀 Live Demo / Test Link
-
-> ### <https://fulstek.uz>
-
-*Logged-out users are redirected to the login page.*  
+- 🛏️ Room & Guest Management
+- 💸 Booking and Payment Handling
+- 📦 Inventory System
+- 📊 Sales & Revenue Reports
+- 🔐 Secure Admin Login and Role Management
+- 🔔 Notifications
+- 📱 Telegram Bot Integration (Admin Alerts)
+- 🌐 Mobile Friendly UI with Bootstrap 5
 
 ---
 
-## 🏗️ Quick Start (local)
+## 📸 Screenshots
+
+> You can add images in `/docs` and link them here
+
+```
+📍 Dashboard
+📍 Admin Panel
+📍 Booking Overview
+📍 Sales Report
+```
+
+---
+
+## 🧪 Test Account
+
+> Visit the test site and use demo credentials to explore the app
+
+🔗 **Live demo:** https://market-admin-demo.onrender.com
+
+| Role    | Username | Password  |
+|---------|----------|-----------|
+| Admin   | admin    | demo123   |
+| Manager | manager  | demo123   |
+
+---
+
+## 🛠️ Tech Stack
+
+- Django 5.2
+- Bootstrap 5
+- SQLite / PostgreSQL
+- JavaScript / HTMX
+- Gunicorn + Nginx (Production)
+
+---
+
+## 💻 Getting Started
 
 ```bash
-git clone (https://github.com/asaprockky/supermarket-pos.git)
-cd market-admin
+git clone https://github.com/yourusername/hotel_crmV2.git
+cd hotel_crmV2
 
-# 1. Create venv + install deps
 python -m venv venv
-source venv/bin/activate            # Windows: venv\Scripts\activate
+source venv/bin/activate       # On Windows use: venv\Scripts\activate
+
 pip install -r requirements.txt
 
-# 2. Environment variables (see .env.example)
-cp .env.example .env                # then edit if needed
+cp .env.example .env           # Set your environment variables
 
-# 3. DB migrations + superuser
 python manage.py migrate
 python manage.py createsuperuser
-
-# 4. Run
 python manage.py runserver
-````
+```
 
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000) – log in → **Admin Panel**.
+Then open http://127.0.0.1:8000 in your browser.
 
 ---
 
-## 🧪 Running Tests
+## 🧪 Run Tests
 
 ```bash
 pytest
 ```
 
-Generates a coverage report:
-
-```bash
-pytest --cov
-```
-
 ---
 
-## 🗂️ Project Structure
-
-```
-market_admin/
-├── market/                # Django app with models, views, templates
-│   ├── templates/market/
-│   ├── static/market/
-│   └── urls.py
-├── media/                 # Uploaded files (ignored in git)
-├── docs/                  # Screenshots, diagrams
-├── requirements.txt
-├── docker-compose.yml     # Optional container setup
-└── README.md
-```
-
----
-
-## 🔧 Configuration
-
-| Variable        | Default      | Purpose                      |
-| --------------- | ------------ | ---------------------------- |
-| `SECRET_KEY`    | `dev-secret` | Django secret                |
-| `DEBUG`         | `True`       | Debug mode                   |
-| `ALLOWED_HOSTS` | `*`          | Hosts list for production    |
-| `DATABASE_URL`  | SQLite       | Any `dj-database-url` string |
-
-*(Set them in `.env`, `docker-compose.yml`, or your hosting dashboard.)*
-
----
-
-## 📈 API Endpoints (JSON)
-
-| URL                                 | Description                   |
-| ----------------------------------- | ----------------------------- |
-| `GET /api/products/?q=milk`         | Autocomplete (name / barcode) |
-| `POST /product/<id>/restock/`       | Add `quantity` to stock       |
-| `POST /product/<id>/restock-level/` | Update `restock_level`        |
-
-All endpoints require an authenticated session; use token or SessionAuth as needed.
-
----
-
-## 🐳 Docker (optional)
+## 🐳 Docker Setup (Optional)
 
 ```bash
 docker compose up --build
 ```
 
-* Django runs on **`8000`**
-* PostgreSQL service included
-* Static files collected to `/static/`
+---
+
+## 📁 Project Structure
+
+```
+hotel_crmV2/
+├── apps/
+│   ├── bookings/
+│   ├── inventory/
+│   └── users/
+├── templates/
+├── static/
+├── media/
+├── manage.py
+├── requirements.txt
+└── README.md
+```
 
 ---
 
-## 🛡️ Security Notes
+## ✉️ Contact
 
-* `LogoutView` uses `GET` by default – safe for this internal app.
-* For stricter CSRF posture, switch to a POST-only logout form.
-
----
-
-## 🤝 Contributing
-
-1. Fork ➡️ Branch (`git checkout -b feature/fancy`)
-2. Code & tests
-3. `black . && isort .`
-4. PR 🚀
-
-All feedback is welcome – open an issue or ping me on Telegram **@s17aj_04**.
+> Maintainer: [@yourhandle](https://t.me/yourhandle)  
+> Email: your@email.com
 
 ---
 
+## 📄 License
 
+MIT License © 2025 Your Name
 
 ---
 
-> *Made with ❤️ in Uzbekistan – «Bir qadam oldinga, har kun!»*
+**Made with ❤️ in Uzbekistan**
